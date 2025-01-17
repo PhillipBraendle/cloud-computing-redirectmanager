@@ -40,6 +40,11 @@ const authenticate = (req, res, next) => {
     next();
 };
 
+// GET /entries - List all entries (requires authentication)
+app.get('/entries', authenticate, (req, res) => {
+    res.json(entries);
+});
+
 // GET /:slug - Redirect to the target URL
 app.get('/:slug', (req, res) => {
     const slug = req.params.slug;
@@ -47,11 +52,6 @@ app.get('/:slug', (req, res) => {
         return res.redirect(entries[slug]);
     }
     res.status(404).sendFile(__dirname + '/not_found.html');
-});
-
-// GET /entries - List all entries (requires authentication)
-app.get('/entries', authenticate, (req, res) => {
-    res.json(entries);
 });
 
 // DELETE /entry/:slug - Remove an entry by slug
@@ -67,21 +67,21 @@ app.delete('/entry/:slug', authenticate, (req, res) => {
 
 // POST /entry - Add a new entry
 app.post('/entry', authenticate, (req, res) => {
-    const { slug, url } = req.body;
+    const new_entry = req.body;
+    const new_slug = Object.keys(new_entry)[0];
+    const new_url = new_entry[new_slug];
 
-    if (!url) {
-        return res.status(400).json({ error: 'URL is required' });
+    if (!new_slug || !new_url) {
+        return res.status(400).json({ error: 'Slug and URL are required' });
     }
 
-    const newSlug = slug || generateSlug();
-
-    if (entries[newSlug]) {
+    if (entries[new_slug]) {
         return res.status(409).json({ error: 'Slug already exists' });
     }
 
-    entries[newSlug] = url;
+    entries[new_slug] = new_url;
     saveEntries();
-    res.status(201).json({ slug: newSlug, url });
+    res.status(201).json({ slug: new_slug, url: new_url });
 });
 
 // Start the server

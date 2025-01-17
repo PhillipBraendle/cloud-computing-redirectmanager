@@ -25,7 +25,7 @@ const saveEntries = () => {
 // Authentication middleware
 const authenticate = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    
+
     if (!authHeader) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
@@ -46,7 +46,7 @@ app.get('/:slug', (req, res) => {
     if (entries[slug]) {
         return res.redirect(entries[slug]);
     }
-    res.status(404).json({ error: 'Slug not found' });
+    res.status(404).sendFile(__dirname + '/not_found.html');
 });
 
 // GET /entries - List all entries (requires authentication)

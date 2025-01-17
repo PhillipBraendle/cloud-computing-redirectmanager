@@ -2,7 +2,7 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON requests
 app.use(express.json());
@@ -31,7 +31,7 @@ const authenticate = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const validToken = process.env.BEARER_TOKEN || 'default_token';
+    const validToken = process.env.BEARER_TOKEN || 'b2aee4d4-4087-453d-b915-78b612a2a238';
 
     if (!token || token !== validToken) {
         return res.status(403).json({ error: 'Forbidden' });

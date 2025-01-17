@@ -6,6 +6,8 @@ services:
     image: redirectmanager:latest
     ports:
       - "80:3000"
+    volumes:
+      - ./redirectmanager/slugs.json:/app/slugs.json
     environment:
       PORT: 3000
       BEARER_TOKEN: b2aee4d4-4087-453d-b915-78b612a2a238

@@ -35,7 +35,7 @@ const authenticate = (req, res, next) => {
     const validToken = process.env.BEARER_TOKEN || 'b2aee4d4-4087-453d-b915-78b612a2a238';
 
     if (!token || token !== validToken) {
-        return res.status(403).json({ error: 'Forbidden' });
+        return res.status(401).json({ error: 'Unauthorized' });
     }
 
     next();
